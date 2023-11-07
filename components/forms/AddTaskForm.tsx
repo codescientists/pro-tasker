@@ -53,7 +53,7 @@ const defaultValues: Partial<AccountFormValues> = {
   priority: "low",
 }
 
-const AddTaskForm = ({user, projectId}) => {
+const AddTaskForm = ({user, projectId, project}) => {
     const { toast } = useToast();
     const pathname = usePathname();
 
@@ -63,16 +63,19 @@ const AddTaskForm = ({user, projectId}) => {
     })
 
     async function onSubmit(data: AccountFormValues) {
+        
         await createTask({
             userId: user._id, 
             projectId: projectId, 
             taskName: data.taskName,
             description: data.description,
             status: data?.status || 'to-do',
+            listId: data?.status,
             priority: data?.priority || 'low',
             dueDate: data?.dueDate || '',
             path: pathname
         })
+        
         toast({
             title: "Success",
             description: "Task created successfully",
@@ -156,13 +159,13 @@ const AddTaskForm = ({user, projectId}) => {
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                             <SelectTrigger>
-                                <SelectValue defaultValue="to-do" placeholder="To do"/>
+                                <SelectValue defaultValue={project.lists[0]._id} placeholder={project.lists[0].title}/>
                             </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                            <SelectItem value="to-do">To do</SelectItem>
-                            <SelectItem value="in-progress">In Progress</SelectItem>
-                            <SelectItem value="completed">Completed</SelectItem>
+                                {project.lists.map((list)=>(
+                                    <SelectItem value={list._id}>{list.title}</SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                         <FormDescription>

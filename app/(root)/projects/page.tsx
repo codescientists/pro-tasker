@@ -55,7 +55,7 @@ const Page = async () => {
                 </Button>
                 </DialogTrigger>        
             
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="md:max-w-[625px]">
                     <AddProjectForm user={userOnDatabase}/>
                 </DialogContent>
             </Dialog>

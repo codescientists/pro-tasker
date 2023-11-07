@@ -14,16 +14,13 @@ const Page = async ({params}) => {
 
   const userOnDatabase = await fetchUser({userId: user?.id});
 
-  const tasks = await fetchTasks({projectId: params.id})
-
   const project = await fetchProject({projectId: params.id})
-
-
+  
   if(project.userId.toString() != userOnDatabase._id.toString()) redirect("/projects");
 
   return (
     <div>
-      <ViewNavbar user={userOnDatabase} projectId={params.id} tasks={tasks} project={project}/>
+      <ViewNavbar user={userOnDatabase} projectId={params.id} project={project}/>
     </div>
   )
 }

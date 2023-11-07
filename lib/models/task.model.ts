@@ -23,23 +23,25 @@ const taskSchema = new mongoose.Schema({
     type: String,
     default: 'to-do',
   },
+  listId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'List',
+  },
   priority: {
     type: String,
     default: 'low',
   },
-  assignees: [{
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-  }],
   dueDate: {
     type: Date,
+  },  
+  assignees: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
+  createdAt:{
+    type: Date,
+    default: Date.now,
+  }
 });
 
 

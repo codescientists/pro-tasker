@@ -14,16 +14,37 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    members: [{
-        name: {
-        type: String,
+    status: {
+        type: [String],
+        default: ['active', 'completed', 'on hold']
+    },
+    startDate: {
+        type: Date,
         required: true,
-        },
-        email: {
-        type: String,
+    },
+    dueDate:{
+        type:Date,
         required: true,
+    },
+    lists: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'List',
+        }
+    ],
+    teamMembers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
         },
-    }],
+    ],
+    tasks: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Task',
+        },
+    ],
+      
 });
 
 
