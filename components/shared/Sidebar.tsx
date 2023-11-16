@@ -11,13 +11,34 @@ import { usePathname } from 'next/navigation';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import EditProjectForm from '../forms/EditProjectForm';
 import AddProjectForm from '../forms/AddProjectForm';
-import { fetchProjects } from '@/lib/actions/project.action';
-import { useRouter } from 'next/navigation';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { toast } from '../ui/use-toast';
+import { deleteProject } from '@/lib/actions/project.action';
 
 const Sidebar = ({user, projects}: any) => {
   const { signOut } = useClerk();
 
   const pathname = usePathname();
+
+  async function handleDeleteProject(projectId) {
+
+    await deleteProject(projectId)
+
+    toast({
+        title: "Project Deleted",
+    })  
+    
+  }
 
   return (
     <div className="hidden border-r w-1/5 md:flex flex-col justify-between" style={{ height: 'calc(100vh - 80px)' }}>
@@ -37,11 +58,29 @@ const Sidebar = ({user, projects}: any) => {
                           <PenBoxIcon className="h-4 w-4" />
                         </Button>
                       </DialogTrigger>
-                        <Button variant="outline" size="icon">
-                          <Trash2Icon className="h-4 w-4" />
-                        </Button>
+                      
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                            <Button variant="outline" size="icon">
+                                <Trash2Icon className="h-4 w-4" />
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your account
+                                and remove your data from our servers.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={()=> handleDeleteProject(project._id)}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                     </div>
-                    <DialogContent className="sm:max-w-[425px]">
+                    <DialogContent className="nd:max-w-[625px]">
                       <EditProjectForm project={project} />
                     </DialogContent>
                   </Dialog>

@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react"
 import { format } from "date-fns"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -30,6 +30,8 @@ import { Textarea } from "../ui/textarea"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { createTask } from "@/lib/actions/task.action"
 import { usePathname } from "next/navigation"
+import { useState } from "react"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
 
 const addTaskFormSchema = z.object({
   taskName: z
@@ -44,6 +46,7 @@ const addTaskFormSchema = z.object({
   status: z.string().optional(),
   priority: z.string().optional(),
   dueDate: z.date().optional(),
+  assignee: z.string().optional(),
 })
 
 type AccountFormValues = z.infer<typeof addTaskFormSchema>
@@ -53,7 +56,7 @@ const defaultValues: Partial<AccountFormValues> = {
   priority: "low",
 }
 
-const AddTaskForm = ({user, projectId, project}) => {
+const AddTaskForm = ({users, user, projectId, project}) => {
     const { toast } = useToast();
     const pathname = usePathname();
 
@@ -73,6 +76,7 @@ const AddTaskForm = ({user, projectId, project}) => {
             listId: data?.status,
             priority: data?.priority || 'low',
             dueDate: data?.dueDate || '',
+            assignee: data?.assignee,
             path: pathname
         })
         
@@ -81,6 +85,9 @@ const AddTaskForm = ({user, projectId, project}) => {
             description: "Task created successfully",
         })  
     }
+
+    const [open, setOpen] = useState(false)
+
 
     return (
         <Form {...form}>
@@ -111,6 +118,7 @@ const AddTaskForm = ({user, projectId, project}) => {
                 </FormItem>
             )}
             />
+            <div className="flex space-x-4 justify-between">
             <FormField
             control={form.control}
             name="dueDate"
@@ -149,6 +157,58 @@ const AddTaskForm = ({user, projectId, project}) => {
                 </FormItem>
             )}
             />
+            <FormField
+            control={form.control}
+            name="assignee"
+            render={({ field }) => (
+                <FormItem className="flex flex-col">
+                <FormLabel>Select Assignee</FormLabel>
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="w-[250px] justify-between"
+                            >   
+                            {field.value
+                                ? users.find((assignee) => assignee._id === field.value)?.name
+                                : "Select assignee..."}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[500px] p-0">
+                            <Command>
+                            <CommandInput placeholder="Search assignee..." />
+                            <CommandEmpty>No assignee found.</CommandEmpty>
+                            <CommandGroup>
+                                {users.slice(0,5).map((assignee) => (
+                                <CommandItem
+                                    key={assignee._id}
+                                    value={assignee._id}
+                                    onSelect={field.onChange}
+                                >
+                                    <Check
+                                        className={cn(
+                                            "mr-2 h-4 w-4",
+                                            field.value === assignee._id ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                    <div className="flex flex-col">
+                                        {assignee.name}
+                                        <p className="text-sm">{assignee.email}</p>
+                                    </div>
+                                </CommandItem>
+                                ))}
+                            </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            </div>
             <div className="flex space-x-4 justify-between">
                 <FormField
                 control={form.control}

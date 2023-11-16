@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react"
 import { format } from "date-fns"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -30,9 +30,11 @@ import { Textarea } from "../ui/textarea"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { editTask } from "@/lib/actions/task.action"
 import { usePathname } from "next/navigation"
-import { revalidatePath } from "next/cache"
+import { useState } from "react"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
 
-const addTaskFormSchema = z.object({
+
+const editTaskFormSchema = z.object({
   taskName: z
     .string()
     .min(2, {
@@ -44,13 +46,14 @@ const addTaskFormSchema = z.object({
   description: z.string(),
   status: z.string().optional(),
   priority: z.string().optional(),
+  assignee: z.string().optional(),
   dueDate: z.date().optional(),
 })
 
-type AccountFormValues = z.infer<typeof addTaskFormSchema>
+type AccountFormValues = z.infer<typeof editTaskFormSchema>
 
 
-const EditTaskForm = ({task}) => {
+const EditTaskForm = ({task, users}) => {
  
     const { toast } = useToast();
     const pathname = usePathname();
@@ -61,10 +64,11 @@ const EditTaskForm = ({task}) => {
       dueDate: task?.dueDate,
       status: task?.status,
       priority: task?.priority,
+      assignee: task?.assignee,
     }
 
     const form = useForm<AccountFormValues>({
-        resolver: zodResolver(addTaskFormSchema),
+        resolver: zodResolver(editTaskFormSchema),
         defaultValues,
     })
 
@@ -76,14 +80,18 @@ const EditTaskForm = ({task}) => {
             status: data?.status || 'to-do',
             priority: data?.priority || 'low',
             dueDate: data?.dueDate || '',
+            assignee: data?.assignee || '',
             path: pathname
         })
-        
+
         toast({
             title: "Success",
             description: "Task updated successfully",
         })  
     }
+
+    const [open, setOpen] = useState(false)
+
 
     return (
         <Form {...form}>
@@ -114,6 +122,7 @@ const EditTaskForm = ({task}) => {
                 </FormItem>
             )}
             />
+             <div className="flex space-x-4 justify-between">
             <FormField
             control={form.control}
             name="dueDate"
@@ -152,6 +161,58 @@ const EditTaskForm = ({task}) => {
                 </FormItem>
             )}
             />
+            <FormField
+            control={form.control}
+            name="assignee"
+            render={({ field }) => (
+                <FormItem className="flex flex-col">
+                <FormLabel>Select Assignee</FormLabel>
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="w-[250px] justify-between"
+                            >   
+                            {field.value
+                                ? users.find((assignee) => assignee._id === field.value)?.name
+                                : "Select assignee..."}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[500px] p-0">
+                            <Command>
+                            <CommandInput placeholder="Search assignee..." />
+                            <CommandEmpty>No assignee found.</CommandEmpty>
+                            <CommandGroup>
+                                {users.slice(0,5).map((assignee) => (
+                                <CommandItem
+                                    key={assignee._id}
+                                    value={assignee._id}
+                                    onSelect={field.onChange}
+                                >
+                                    <Check
+                                        className={cn(
+                                            "mr-2 h-4 w-4",
+                                            field.value === assignee._id ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                    <div className="flex flex-col">
+                                        {assignee.name}
+                                        <p className="text-sm">{assignee.email}</p>
+                                    </div>
+                                </CommandItem>
+                                ))}
+                            </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            </div>
             <div className="flex space-x-4 justify-between">
                 <FormField
                 control={form.control}
@@ -206,10 +267,10 @@ const EditTaskForm = ({task}) => {
             </div>
 
             <div className="flex ml-auto w-full justify-end">
-                <DialogClose>
+                <DialogClose className="flex ml-auto justify-end">
                     <Button type="button" variant="secondary" className="w-full">Close</Button>
+                    <Button type="submit" className="ml-2">Update</Button>
                 </DialogClose>
-                <Button type="submit" className="ml-2">Update</Button>
             </div>
            
         </form>

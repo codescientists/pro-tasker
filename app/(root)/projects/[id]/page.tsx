@@ -1,8 +1,7 @@
 
 import ViewNavbar from '@/components/shared/ViewNavbar'
 import { fetchProject } from '@/lib/actions/project.action'
-import { fetchTasks } from '@/lib/actions/task.action'
-import { fetchUser } from '@/lib/actions/user.action'
+import { fetchAllUsers, fetchUser } from '@/lib/actions/user.action'
 import { currentUser } from '@clerk/nextjs'
 import { User } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
@@ -16,11 +15,13 @@ const Page = async ({params}) => {
 
   const project = await fetchProject({projectId: params.id})
   
-  if(project.userId.toString() != userOnDatabase._id.toString()) redirect("/projects");
+  if(project?.userId?.toString() != userOnDatabase._id.toString()) redirect("/projects");
+  
+  const users = await fetchAllUsers();
 
   return (
     <div>
-      <ViewNavbar user={userOnDatabase} projectId={params.id} project={project}/>
+      <ViewNavbar users={users} user={userOnDatabase} projectId={params.id} project={project}/>
     </div>
   )
 }

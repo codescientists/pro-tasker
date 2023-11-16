@@ -5,24 +5,14 @@ import Task from "../models/task.model";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import Project from "../models/project.model";
-
-export async function fetchTasks({projectId}) {
-  try {
-    connectToDB();
-
-    return await Task.find({projectId})
-    
-  } catch (error: any) {
-    throw new Error(`Failed to fetch task: ${error.message}`);
-  }
-}
+import mongoose from "mongoose";
 
 interface TaskParams{
     userId: string, projectId: string, taskName:string, description: string, dueDate: Date, status: string, priority: string, path: string
 }
 
 export async function createTask({
-    userId, projectId, taskName, description, dueDate, status, listId, priority, path
+    userId, projectId, taskName, description, dueDate, status, listId, priority, assignee, path
 }: TaskParams): Promise<void> {
     try {
       connectToDB();
@@ -35,6 +25,7 @@ export async function createTask({
         dueDate: dueDate,
         status: status,
         listId: listId,
+        assignee: assignee,
         priority: priority,
         },
       );
@@ -44,7 +35,7 @@ export async function createTask({
         $push: { tasks: createdTask._id },
       });
         
-      revalidatePath(`/`)
+      revalidatePath(path, 'layout')
 
     } catch (error: any) {
       throw new Error(`Failed to create task: ${error.message}`);
@@ -52,7 +43,7 @@ export async function createTask({
 }
 
 export async function editTask({
-    taskId, taskName, description, dueDate, status, priority, path
+    taskId, taskName, description, dueDate, status, priority, assignee, path
 }: TaskParams): Promise<void> {
     try {
       connectToDB();
@@ -63,12 +54,13 @@ export async function editTask({
         dueDate: dueDate,
         status: status,
         priority: priority,
+        assignee: new mongoose.Types.ObjectId(assignee),
       })
         
-      revalidatePath('/')
+      revalidatePath(path, 'layout')
 
     } catch (error: any) {
-      throw new Error(`Failed to create task: ${error.message}`);
+      throw new Error(`Failed to edit task: ${error.message}`);
     }
 }
 
@@ -83,6 +75,6 @@ export async function deleteTask({
       revalidatePath(path)
 
     } catch (error: any) {
-      throw new Error(`Failed to create task: ${error.message}`);
+      throw new Error(`Failed to delete task: ${error.message}`);
     }
 }

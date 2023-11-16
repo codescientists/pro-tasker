@@ -1,8 +1,7 @@
 "use client"
-import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Clock10Icon, PenBoxIcon, Trash2Icon } from "lucide-react";
+import { Clock10Icon, PenBoxIcon, Trash2Icon, User2 } from "lucide-react";
 import Moment from 'moment';
 
 
@@ -25,7 +24,7 @@ import { deleteTask } from "@/lib/actions/task.action";
 //   updateTask: (id: Id, content: string) => void;
 // }
 
-function TaskCard({ task }) {
+function TaskCard({ task, users }) {
   const { _id, taskName, priority , dueDate} = task;
 
   const {toast} = useToast();
@@ -80,7 +79,7 @@ function TaskCard({ task }) {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-slate-100 dark:bg-slate-900 p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-md hover:ring-2 hover:ring-inset hover:ring-blue-500 cursor-grab relative task"
+      className="bg-slate-100 dark:bg-slate-900 p-2.5 min-h-[100px] items-center flex text-left rounded-md hover:ring-2 hover:ring-inset hover:ring-blue-500 cursor-grab relative task"
     >
       <Dialog>
         <div className="flex flex-col justify-between mb-2">
@@ -88,6 +87,10 @@ function TaskCard({ task }) {
             {priority}
           </div>
           <div className="text-lg font-semibold">{taskName}</div>
+          <div className="flex items-center space-x-1 text-sm mt-2">
+            <User2 size={15}/>
+            <span className="font-light text-[11px]">{task.assignee.name}</span>
+          </div>
           <div className="flex items-center space-x-1 text-sm mt-2">
             <Clock10Icon size={15}/>
             <span className="font-light text-[11px]">{Moment(dueDate).format('D MMMM')}</span>
@@ -111,7 +114,7 @@ function TaskCard({ task }) {
           </div>
         </div> 
         <DialogContent className="md:max-w-[625px]">
-          <EditTaskForm task={task} />
+          <EditTaskForm task={task} users={users} />
         </DialogContent>
       </Dialog>
 

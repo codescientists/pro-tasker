@@ -23,6 +23,7 @@ function ColumnContainer({
   updateColumn,
   tasks,
   projectId,
+  users,
 }) {
   const [editMode, setEditMode] = useState(false);
 
@@ -130,6 +131,7 @@ function ColumnContainer({
             <TaskCard
               key={task._id}
               task={task}
+              users={users}
             />
           ))}
         </SortableContext>

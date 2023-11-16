@@ -33,6 +33,7 @@ export default async function RootLayout({
 
   const projects = await fetchProjects({userId: userOnDatabase?._id})
   
+  
   return (
     <ClerkProvider>
       <html lang="en">
@@ -46,6 +47,7 @@ export default async function RootLayout({
               <Navbar user={userOnDatabase}/>
               <div className="flex">
                 <Sidebar projects={projects} user={userOnDatabase}/>
+                
                 <div className="md:w-4/5">
                   {children}
                 </div>

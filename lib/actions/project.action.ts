@@ -5,6 +5,7 @@ import Project from "../models/project.model";
 import { connectToDB } from "../mongoose";
 import Task from "../models/task.model";
 import List from "../models/list.model";
+import User from "../models/user.model";
 
 export async function fetchProjects({userId}) {
   try {
@@ -21,17 +22,25 @@ export async function fetchProject({projectId}) {
   try {
     connectToDB();
 
-    return await Project.findById(projectId).lean().populate([
+    const project = await Project.findById(projectId).populate([
       {
         path: "tasks",
         model: Task,
+        populate: {
+          path: 'assignee',
+          model: User,
+        }
       },
       {
         path: "lists",
         model: List,  
       }
-    ]);
-  
+    ]).lean();
+
+    console.log(project)
+
+    return project
+    
     
   } catch (error: any) {
     throw new Error(`Failed to fetch projects: ${error.message}`);
@@ -91,7 +100,11 @@ export async function createProject({
 }
 
 export async function updateProject({
-    projectId, title, description, 
+    projectId, 
+    title,
+    description,
+    startDate,
+    dueDate, 
 }: ProjectParams): Promise<void> {
     try {
       connectToDB();
@@ -99,6 +112,8 @@ export async function updateProject({
       await Project.findByIdAndUpdate(projectId, {
         title: title,
         description: description,
+        startDate: startDate,
+        dueDate: dueDate,
       })
 
       revalidatePath('/')
@@ -200,5 +215,35 @@ export async function deleteListAndTasks(listId, projectId) {
 
   } catch (error) {
     throw new Error(`Failed to delete list and tasks: ${error.message}`);
+  }
+}
+
+
+export async function deleteProject(projectId) {
+  try {
+    // Find the project by its ID to get the associated lists and tasks
+    const project = await Project.findById(projectId).populate('lists tasks');
+
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    // Remove tasks associated with the project
+    const taskIds = project.tasks.map(task => task._id);
+    await Task.deleteMany({ _id: { $in: taskIds } });
+
+    // Remove lists associated with the project
+    const listIds = project.lists.map(list => list._id);
+    await List.deleteMany({ _id: { $in: listIds } });
+
+    // Remove the project itself
+    await Project.deleteOne({ _id: projectId });
+
+    revalidatePath('/');
+
+
+  } catch (error: any) {
+    console.error('Error deleting project:', error.message);
+    throw error;
   }
 }

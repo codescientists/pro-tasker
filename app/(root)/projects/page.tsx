@@ -2,12 +2,24 @@ import AddProjectForm from "@/components/forms/AddProjectForm";
 import EditProjectForm from "@/components/forms/EditProjectForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { fetchProjects } from "@/lib/actions/project.action";
+import { deleteProject, fetchProjects } from "@/lib/actions/project.action";
 import { fetchUser } from "@/lib/actions/user.action";
 import { currentUser } from "@clerk/nextjs";
 import { ChevronRight, PenBoxIcon, PlusCircleIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
-
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
+import { toast } from "@/components/ui/use-toast";
+  
 
 const Page = async () => {
     const user = await currentUser();
@@ -15,6 +27,8 @@ const Page = async () => {
   const userOnDatabase = await fetchUser({userId: user?.id});
 
   const projects = await fetchProjects({userId: userOnDatabase?._id})
+
+
 
   return (
     <div>
@@ -37,11 +51,31 @@ const Page = async () => {
                                 <PenBoxIcon className="h-4 w-4" />
                             </Button>
                             </DialogTrigger>
-                            <Button variant="outline" size="icon">
-                                <Trash2Icon className="h-4 w-4" />
-                            </Button>
+
+                            <AlertDialog>
+                                <AlertDialogTrigger>
+                                    <Button variant="outline" size="icon">
+                                        <Trash2Icon className="h-4 w-4" />
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete this project and it's lists and tasks your data from our servers.
+                                    </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction>Delete</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+
+
+                            
                         </div>
-                        <DialogContent className="sm:max-w-[425px]">
+                        <DialogContent className="md:max-w-[625px]">
                             <EditProjectForm project={project} />
                         </DialogContent>
                         </Dialog>

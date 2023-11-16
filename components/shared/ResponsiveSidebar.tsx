@@ -58,7 +58,7 @@ const ResponsiveSidebar = ({projects}) => {
                           <Trash2Icon className="h-4 w-4" />
                         </Button>
                     </div>
-                    <DialogContent className="sm:max-w-[425px]">
+                    <DialogContent className="md:max-w-[625px]">
                       <EditProjectForm project={project} />
                     </DialogContent>
                   </Dialog>

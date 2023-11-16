@@ -3,6 +3,17 @@
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 
+export async function fetchAllUsers() {
+  try {
+    connectToDB();
+
+    return await User.find();
+    
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
+
 export async function fetchUser({userId}) {
   try {
     connectToDB();

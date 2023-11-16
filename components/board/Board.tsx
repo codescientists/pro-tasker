@@ -21,7 +21,7 @@ import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 
 
-function Board({fetchedTasks, lists, projectId}) {
+function Board({fetchedTasks, lists, projectId, users}) {
   
   const [tasks, setTasks] = useState<Task[]>(fetchedTasks);
 
@@ -160,10 +160,11 @@ function Board({fetchedTasks, lists, projectId}) {
         // searching column with overId(position) to set task's status
         const foundColumn = sortedColumns.find(column => column.position === overId);
 
-        tasks[activeIndex].listId = foundColumn._id;
+        tasks[activeIndex].listId = foundColumn._id;  
         
         return arrayMove(tasks, activeIndex, activeIndex);
       });
+    
     }
   }
 
@@ -185,6 +186,7 @@ function Board({fetchedTasks, lists, projectId}) {
                   column={col}
                   deleteColumn={deleteColumn}
                   updateColumn={updateColumn}
+                  users={users}
                   tasks={tasks.filter((task) => task.listId === col._id)}
                   projectId={projectId}
                 />
@@ -208,6 +210,8 @@ function Board({fetchedTasks, lists, projectId}) {
                 column={activeColumn}
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}
+                users={users}
+                projectId={projectId}
                 tasks={tasks.filter(
                   (task) => task.listId === activeColumn._id
                 )}
@@ -216,6 +220,7 @@ function Board({fetchedTasks, lists, projectId}) {
             {activeTask && (  
               <TaskCard
                 task={activeTask}
+                users={users}
               />
             )}
           </DragOverlay>,

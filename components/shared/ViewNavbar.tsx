@@ -1,6 +1,9 @@
-import Link from "next/link"
+"use client"
 import { Button } from "../ui/button"
 import { AiOutlinePlus } from "react-icons/ai"
+
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
 
 import {
   Dialog,
@@ -22,7 +25,7 @@ import Board from "../board/Board"
 import List from "../list/List"
 
 
-const ViewNavbar = ({user, projectId, project}: any) => {  
+const ViewNavbar = ({users, user, projectId, project}: any) => {  
   return (
     <div className="px-10 pt-5 w-full">
       <div>
@@ -42,18 +45,18 @@ const ViewNavbar = ({user, projectId, project}: any) => {
               </Button>
             </DialogTrigger>
             <DialogContent className="md:max-w-[625px]">
-              <AddTaskForm user={user} projectId={projectId} project={project}/>
+              <AddTaskForm users={users} user={user} projectId={projectId} project={project}/>
             </DialogContent>
         </div>
         <TabsContent value="board">
-          <Board fetchedTasks={project.tasks} lists={project.lists} projectId={projectId}/>
+          <Board fetchedTasks={project.tasks} lists={project.lists} projectId={projectId} users={users}/>
         </TabsContent>
         <TabsContent value="list">
           <List tasks={project.tasks} />
         </TabsContent>
         <TabsContent value="calendar">
           <div>
-            calender
+            This Feature Coming Sooon! Stay Tuned!
           </div>
         </TabsContent>
       </Tabs>
