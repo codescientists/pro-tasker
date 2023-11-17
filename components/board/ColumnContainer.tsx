@@ -57,7 +57,7 @@ function ColumnContainer({
       <div
         ref={setNodeRef}
         style={style}
-        className=" bg-slate-950 opacity-40 border-2  border-blue-500 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
+        className="bg-slate-200 dark:bg-slate-950 opacity-40 border-2  border-blue-500 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
       ></div>
     );
   }
@@ -66,7 +66,7 @@ function ColumnContainer({
     <div
       ref={setNodeRef}
       style={style}
-      className=" bg-slate-950 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col border"
+      className="bg-slate-100 dark:bg-slate-950 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col border"
     >
       <div
         {...attributes}
@@ -74,13 +74,13 @@ function ColumnContainer({
         onClick={() => {
           setEditMode(true);
         }}
-        className="bg-slate-950 text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold border-columnBackgroundColor border-4 flex items-center justify-between "
+        className="bg-slate-100 dark:bg-slate-950 text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold border-columnBackgroundColor border-4 flex items-center justify-between "
       >
         <div className="flex gap-2">
           {!editMode && column.title}
           {editMode && (
             <input
-              className="bg-black border rounded outline-none px-2 py-2"
+              className="bg-slate-100 dark:bg-black border rounded outline-none px-2 py-2"
               value={column.title}
               onChange={(e) => updateColumn(column._id, e.target.value, column.position)}
               autoFocus

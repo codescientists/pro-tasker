@@ -67,7 +67,7 @@ function TaskCard({ task, users }) {
         ref={setNodeRef}
         style={style}
         className="
-        opacity-30 bg-slate-900 p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-blue-500  cursor-grab relative
+        opacity-30 bg-slate-200 dark:bg-slate-900 p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-blue-500  cursor-grab relative
       "
       />
     );
@@ -79,7 +79,7 @@ function TaskCard({ task, users }) {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-slate-100 dark:bg-slate-900 p-2.5 min-h-[100px] items-center flex text-left rounded-md hover:ring-2 hover:ring-inset hover:ring-blue-500 cursor-grab relative task"
+      className="bg-slate-200 dark:bg-slate-900 p-2.5 min-h-[100px] items-center flex text-left rounded-md hover:ring-2 hover:ring-inset hover:ring-blue-500 cursor-grab relative task"
     >
       <Dialog>
         <div className="flex flex-col justify-between mb-2">
