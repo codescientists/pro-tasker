@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pro Tasker - Project Task Management App
 
-## Getting Started
+Welcome to Pro Tasker, your ultimate solution for efficient project task management. Streamline your projects, collaborate effectively, and stay organized with our intuitive platform.
 
-First, run the development server:
+## 🚀 Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![Home](https://github.com/codescientists/pro-tasker/assets/66505013/6fc2552d-27ba-467d-8fc2-01a02bd5a7c9)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 💡 Introduction
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Pro Tasker is a powerful task management app designed to help teams tackle projects with ease. With Pro Tasket, you can:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Organize tasks seamlessly: Create, assign, and track tasks effortlessly, ensuring everyone stays on the same page.
+- Foster collaboration: Collaborate with team members in real-time, share files, and discuss project details within the app.
+- Stay organized: Keep your projects organized with customizable task lists, labels, and due dates.
+- Monitor progress: Get insights into project progress with intuitive dashboards and reporting tools.
+- Boost productivity: Streamline workflows, set priorities, and automate repetitive tasks to maximize productivity.
 
-## Learn More
+## ⚙️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- ReactJS
+- Next.js
+- TypeScript
+- Tailwind CSS
+- MongoDB
+- React DnD
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📸 Screenshots
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+**Task Board**
 
-## Deploy on Vercel
+![Task Board](https://github.com/codescientists/pro-tasker/assets/66505013/6fc2552d-27ba-467d-8fc2-01a02bd5a7c9)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**NEW / EDIT Task**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![EDIT TASK](https://github.com/codescientists/pro-tasker/assets/66505013/93167a2a-fa0e-422a-80b6-3f4e16b5abeb)
+
+**New Project**
+
+![image](https://github.com/codescientists/pro-tasker/assets/66505013/38922583-2e84-446f-ac51-2c5800069c41)
+
+**DARK / LIGHT Theme**
+
+![image](https://github.com/codescientists/pro-tasker/assets/66505013/6eb28124-23c8-4529-a3c3-b64c30f8de3c)
